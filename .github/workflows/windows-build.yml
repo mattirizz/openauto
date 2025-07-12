@@ -18,7 +18,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          .\vcpkg\vcpkg.exe install boost-system boost-log libusb openssl protobuf rtaudio qt5-base qt5-multimedia qt5-bluetooth --triplet x64-windows
+          .\vcpkg\vcpkg.exe install boost-system boost-log libusb openssl protobuf rtaudio qt5-base qt5-multimedia qt5-connectivity --triplet x64-windows
 
       - name: Configure CMake
         run: |
