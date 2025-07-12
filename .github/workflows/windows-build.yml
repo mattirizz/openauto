@@ -1,0 +1,35 @@
+name: Build OpenAuto (Windows)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build-win:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup vcpkg
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git ${{ github.workspace }}/vcpkg
+          .\vcpkg\bootstrap-vcpkg.bat
+
+      - name: Install Dependencies
+        run: |
+          .\vcpkg\vcpkg.exe install boost-system boost-log libusb openssl protobuf rtaudio qt5-base qt5-multimedia qt5-bluetooth --triplet x64-windows
+
+      - name: Configure CMake
+        run: |
+          mkdir build
+          cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=vcpkg\scripts\buildsystems\vcpkg.cmake -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: OpenAuto-Windows
+          path: build\bin\
